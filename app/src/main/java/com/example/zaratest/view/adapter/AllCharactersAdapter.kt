@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.zaratest.R
 import com.example.zaratest.databinding.ItemAllCharactersBinding
-import com.example.zaratest.model.AllCharacters
 import com.example.zaratest.model.ResultsCharacters
 import com.squareup.picasso.Picasso
 
@@ -20,7 +19,7 @@ class AllCharactersAdapter (
     private lateinit var characterItemBinding: ItemAllCharactersBinding
 
     interface OnCharacterClickListener {
-        fun onCharacterClick(image: String, name: String)
+        fun onCharacterClick(image: String, name: String, id: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllCharactersViewHolder {
@@ -43,7 +42,7 @@ class AllCharactersAdapter (
             name.text = characters.name
             image.setImageUrl(characters.image)
             itemView.setOnClickListener{
-                characterClickListener.onCharacterClick(characters.name, characters.image)
+                characterClickListener.onCharacterClick(characters.name, characters.image, characters.id)
             }
         }
     }

@@ -14,8 +14,12 @@ import com.squareup.picasso.Picasso
 
 class SingleCharacterFragment : Fragment() {
 
-    private val viewmodel : AllCharactersViewModel by activityViewModels()
-    private lateinit var singleCharacterBinding: FragmentSingleCharacterBinding
+    private val viewModel : AllCharactersViewModel by activityViewModels()
+    lateinit var singleCharacterBinding: FragmentSingleCharacterBinding
+
+    private val userId: Int by lazy {
+        arguments?.getInt(EXTRA_CHARACTER_ID) ?: 0
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,8 +31,9 @@ class SingleCharacterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        singleCharacterBinding.text.text = viewmodel.name.value
-        viewmodel.image.value?.let { singleCharacterBinding.imageDetail.setImageUrl(it) }
+        getSingleCharacter(userId)
+        singleCharacterBinding.characterName.text = viewModel.name.value
+        viewModel.image.value?.let { singleCharacterBinding.imageDetail.setImageUrl(it) }
     }
 
     private fun ImageView.setImageUrl(url:String){
@@ -37,4 +42,26 @@ class SingleCharacterFragment : Fragment() {
             .placeholder(R.drawable.ic_loading)
             .into(this)
     }
+
+    private fun getSingleCharacter(user: Int){
+        if (view!=null){
+        viewModel.getSingleCharacter(user).observe(viewLifecycleOwner){
+            singleCharacterBinding.characterStatus.text = it.status
+            singleCharacterBinding.characterSpecies.text = it.species
+            singleCharacterBinding.characterGender.text = it.gender
+        }
+        }
+    }
+
+    companion object {
+        const val EXTRA_CHARACTER_ID = "EXTRA_CHARACTER_ID"
+        fun newInstance(characterId: Int): SingleCharacterFragment {
+            return SingleCharacterFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(EXTRA_CHARACTER_ID, characterId)
+                }
+            }
+        }
+    }
+
 }

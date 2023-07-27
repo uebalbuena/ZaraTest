@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -45,9 +46,11 @@ class AllCharactersFragment : Fragment(), AllCharactersAdapter.OnCharacterClickL
     }
 
     private fun getCharacters() {
-        allCharactersViewModel.getCharacters().observe(this) { allCharacters ->
+        if (view != null){
+        allCharactersViewModel.getCharacters().observe(viewLifecycleOwner) { allCharacters ->
             prepareRecyclerView(allCharacters.characterResults)
             charactersBinding.progressList.visibility = View.GONE
+        }
         }
     }
 
@@ -58,9 +61,14 @@ class AllCharactersFragment : Fragment(), AllCharactersAdapter.OnCharacterClickL
         charactersBinding.recyclerAllCharacters.adapter = charactersAdapter
     }
 
-    override fun onCharacterClick(image: String, name: String) {
+    override fun onCharacterClick(
+        image: String,
+        name: String,
+        id: Int
+    ) {
         allCharactersViewModel.saveStrings(image, name)
-        findNavController().navigate(R.id.action_allCharactersFragment_to_singleCharacterFragment)
+        val bundle = bundleOf(SingleCharacterFragment.EXTRA_CHARACTER_ID to id)
+        findNavController().navigate(R.id.action_allCharactersFragment_to_singleCharacterFragment, bundle)
     }
 
 }
