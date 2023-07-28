@@ -5,4 +5,8 @@
     </style>
 
     <style name="Theme.ZaraTest" parent="Base.Theme.ZaraTest" />
+
+    <style name="splashTheme" parent="Base.Theme.ZaraTest">
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+    </style>
 </resources>

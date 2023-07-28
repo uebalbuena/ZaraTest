@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingActivity: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_ZaraTest)
         super.onCreate(savedInstanceState)
         bindingActivity = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingActivity.root)

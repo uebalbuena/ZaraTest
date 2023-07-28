@@ -16,6 +16,7 @@ class AllCharactersViewModel: ViewModel() {
 
     var image = MutableLiveData<String>()
     var name = MutableLiveData<String>()
+    var id = MutableLiveData<Int>()
 
     private var characterList: MutableLiveData<AllCharacters>? = null
     private var characterSingle: MutableLiveData<ResultsCharacters>? = null
@@ -29,13 +30,12 @@ class AllCharactersViewModel: ViewModel() {
     }
 
     fun getSingleCharacter(id: Int): LiveData<ResultsCharacters> {
-        if (characterSingle == null) {
+        if (characterSingle == null || characterSingle!!.isInitialized) {
             characterSingle = MutableLiveData<ResultsCharacters>()
             loadSingleCharacter(id)
         }
         return characterSingle as MutableLiveData<ResultsCharacters>
     }
-
 
     private fun loadCharacters() {
 
@@ -87,8 +87,9 @@ class AllCharactersViewModel: ViewModel() {
         })
     }
 
-    fun saveStrings(name: String, image: String) {
+    fun saveStrings(name: String, image: String, id: Int) {
         this.image.value = image
         this.name.value = name
+        this.id.value = id
     }
 }

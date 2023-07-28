@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.zaratest.R
 import com.example.zaratest.databinding.FragmentSingleCharacterBinding
 import com.example.zaratest.viewModel.AllCharactersViewModel
@@ -15,11 +17,7 @@ import com.squareup.picasso.Picasso
 class SingleCharacterFragment : Fragment() {
 
     private val viewModel : AllCharactersViewModel by activityViewModels()
-    lateinit var singleCharacterBinding: FragmentSingleCharacterBinding
-
-    private val userId: Int by lazy {
-        arguments?.getInt(EXTRA_CHARACTER_ID) ?: 0
-    }
+    private lateinit var singleCharacterBinding: FragmentSingleCharacterBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,9 +29,20 @@ class SingleCharacterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getSingleCharacter(userId)
         singleCharacterBinding.characterName.text = viewModel.name.value
         viewModel.image.value?.let { singleCharacterBinding.imageDetail.setImageUrl(it) }
+        getSingleCharacter()
+//        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                findNavController().popBackStack()
+//            }
+//        }
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getSingleCharacter()
     }
 
     private fun ImageView.setImageUrl(url:String){
@@ -43,25 +52,13 @@ class SingleCharacterFragment : Fragment() {
             .into(this)
     }
 
-    private fun getSingleCharacter(user: Int){
-        if (view!=null){
-        viewModel.getSingleCharacter(user).observe(viewLifecycleOwner){
-            singleCharacterBinding.characterStatus.text = it.status
-            singleCharacterBinding.characterSpecies.text = it.species
-            singleCharacterBinding.characterGender.text = it.gender
-        }
-        }
-    }
-
-    companion object {
-        const val EXTRA_CHARACTER_ID = "EXTRA_CHARACTER_ID"
-        fun newInstance(characterId: Int): SingleCharacterFragment {
-            return SingleCharacterFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(EXTRA_CHARACTER_ID, characterId)
-                }
+    private fun getSingleCharacter(){
+        viewModel.id.value?.let { id ->
+            viewModel.getSingleCharacter(id).observe(viewLifecycleOwner) {
+                singleCharacterBinding.characterStatus.text = it.status
+                singleCharacterBinding.characterSpecies.text = it.species
+                singleCharacterBinding.characterGender.text = it.gender
             }
         }
     }
-
 }

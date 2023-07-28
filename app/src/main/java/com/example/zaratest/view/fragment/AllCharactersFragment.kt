@@ -66,9 +66,9 @@ class AllCharactersFragment : Fragment(), AllCharactersAdapter.OnCharacterClickL
         name: String,
         id: Int
     ) {
-        allCharactersViewModel.saveStrings(image, name)
-        val bundle = bundleOf(SingleCharacterFragment.EXTRA_CHARACTER_ID to id)
-        findNavController().navigate(R.id.action_allCharactersFragment_to_singleCharacterFragment, bundle)
+        allCharactersViewModel.saveStrings(image, name, id)
+//        val bundle = bundleOf(SingleCharacterFragment.EXTRA_CHARACTER_ID to id)
+        findNavController().navigate(R.id.action_allCharactersFragment_to_singleCharacterFragment)
     }
 
 }
